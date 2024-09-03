@@ -311,6 +311,37 @@
                     </div>
                 </div>
             </div>
+            
+
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="card-header-icon">
+                                <i class="tio-puzzle"></i>
+                            </span>
+                            <span>Whole Sale</span>
+                        </h5>
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-wrap-reverse justify-content-between">
+                            <div class="w-200 flex-grow-1 mr-3">
+                                {{translate('Turning Wholesale will create offer on product wholesale')}}
+                            </div>
+                            <div class="d-flex align-items-center mb-2 mb-sm-0">
+                                <h5 class="mb-0 mr-2">{{ translate('Wholesale') }}</h5>
+                                <label class="toggle-switch my-0">
+                                    <input type="checkbox" class="toggle-switch-input" name="wholesale" id="wholesale-toggle" value="1">
+                                    <span class="toggle-switch-label mx-auto text">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
 
             <div class="col-lg-6" id="wholesale-fields" style="display: none;">
                 <div class="card h-100">
@@ -321,11 +352,11 @@
                         
                         <div class="form-group">
                             <label for="min-quantity">{{ translate('Minimum Quantity') }}</label>
-                            <input type="number" class="form-control" id="min-quantity" name="minimum_quantity" placeholder="Enter minimum quantity">
+                            <input type="number" class="form-control" id="min-quantity" name="minimum_wholesale_qty" placeholder="Enter minimum quantity">
                         </div>
                         <div class="form-group">
                             <label for="max-quantity">{{ translate('Maximum Quantity') }}</label>
-                            <input type="number" class="form-control" id="max-quantity" name="maximum_quantity" placeholder="Enter maximum quantity">
+                            <input type="number" class="form-control" id="max-quantity" name="maximum_wholesale_qty" placeholder="Enter maximum quantity">
                         </div>
                         
                         <div class="form-group">
