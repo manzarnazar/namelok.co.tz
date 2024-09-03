@@ -331,7 +331,7 @@
                             <div class="d-flex align-items-center mb-2 mb-sm-0">
                                 <h5 class="mb-0 mr-2">{{ translate('Wholesale') }}</h5>
                                 <label class="toggle-switch my-0">
-                                    <input type="checkbox" class="toggle-switch-input" name="wholesale" id="wholesale-toggle" value="1">
+                                    <input type="checkbox" class="toggle-switch-input" name="is_wholesale" id="wholesale-toggle" value="1">
                                     <span class="toggle-switch-label mx-auto text">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
