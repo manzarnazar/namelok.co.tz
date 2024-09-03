@@ -312,6 +312,31 @@
                 </div>
             </div>
 
+            <div class="col-lg-6" id="wholesale-fields" style="display: none;">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">Wholesale Options</h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="form-group">
+                            <label for="min-quantity">{{ translate('Minimum Quantity') }}</label>
+                            <input type="number" class="form-control" id="min-quantity" name="minimum_quantity" placeholder="Enter minimum quantity">
+                        </div>
+                        <div class="form-group">
+                            <label for="max-quantity">{{ translate('Maximum Quantity') }}</label>
+                            <input type="number" class="form-control" id="max-quantity" name="maximum_quantity" placeholder="Enter maximum quantity">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expiry_date">Wholesale Expiry Date:</label>
+                            <input type="date" name="expiry_date_wholesale" id="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="btn--container justify-content-end">
                     <a href="" class="btn btn--reset min-w-120px">{{translate('reset')}}</a>
@@ -547,6 +572,17 @@
     </script>
 
     <script>
+
+        document.getElementById('wholesale-toggle').addEventListener('change', function() {
+            var wholesaleFields = document.getElementById('wholesale-fields');
+            // document.getElementById('wholesale_expiry_group').style.display = this.checked ? 'block' : 'none';
+            if (this.checked) {
+                wholesaleFields.style.display = 'block';
+            } else {
+                wholesaleFields.style.display = 'none';
+            }
+        });
+
         function update_qty() {
             var total_qty = 0;
             var qty_elements = $('input[name^="stock_"]');
