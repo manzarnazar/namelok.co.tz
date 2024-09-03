@@ -361,7 +361,7 @@
                         
                         <div class="form-group">
                             <label for="expiry_date">Wholesale Expiry Date:</label>
-                            <input type="date" name="expiry_date_wholesale" id="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
+                            <input type="date" name="wholesale_expiry_date" id="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
                         </div>
 
                     </div>
