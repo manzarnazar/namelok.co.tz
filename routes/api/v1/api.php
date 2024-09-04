@@ -74,6 +74,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::get('trending', [ProductController::class, 'getTrendingProducts']);
         Route::get('recommended', [ProductController::class, 'getRecommendedProducts']);
         Route::get('most-reviewed', [ProductController::class, 'getMostReviewedProducts']);
+        Route::get('wholesale', [ProductController::class, 'wholesaleProducts']);
+
     });
 
     Route::group(['prefix' => 'banners'], function () {

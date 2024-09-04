@@ -496,6 +496,34 @@ class ProductController extends Controller
             ], 404);
         }
     }
+    
+    public function wholesaleProducts(Request $request): JsonResponse
+{
+    try {
+        // Adjust the query to filter wholesale products
+        $paginator = $this->product->active()
+            ->withCount(['wishlist'])
+            ->with(['rating'])
+            ->where(['is_wholesale' => 1]) // Assuming 'is_wholesale' marks a product as wholesale
+            ->orderBy('id', 'desc')
+            ->paginate($request['limit'], ['*'], 'page', $request['offset']);
+
+        $products = [
+            'total_size' => $paginator->total(),
+            'limit' => $request['limit'],
+            'offset' => $request['offset'],
+            'products' => $paginator->items()
+        ];
+        $paginator = Helpers::product_data_formatting($products['products'], true);
+
+        return response()->json($products, 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'errors' => ['code' => 'product-002', 'message' => 'Wholesale products not found!'],
+        ], 404);
+    }
+}
+
 
     /**
      * @param Request $request
