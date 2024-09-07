@@ -13,7 +13,7 @@ return new class extends Migration
     {
         if (!Schema::hasColumn('order_details', 'is_wholesale')) {
             Schema::table('order_details', function (Blueprint $table) {
-                $table->boolean('is_wholesale')->default(0)->after('another_column');
+                $table->boolean('is_wholesale')->default(0)->after('product_id');
             });
         }
     }
@@ -24,4 +24,5 @@ return new class extends Migration
             $table->dropColumn('is_wholesale');
         });
     }
+    
 };
