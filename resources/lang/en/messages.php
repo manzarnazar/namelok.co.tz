@@ -2525,4 +2525,13 @@
   'Complete Installation' => 'Complete Installation',
   'Username' => 'Username',
   'One Referrer Equal To How Much TZS' => 'One Referrer Equal To How Much TZS',
+  'Maximum Quantity' => 'Maximum Quantity',
+  'Minimum Quantity' => 'Minimum Quantity',
+  'Wholesale' => 'Wholesale',
+  'Wholesale expiry date is required if the product is wholesale!' => 'Wholesale expiry date is required if the product is wholesale!',
+  'Turning Wholesale will create offer on product wholesale' => 'Turning Wholesale will create offer on product wholesale',
+  'Maximum wholesale quantity is required if the product is wholesale!' => 'Maximum wholesale quantity is required if the product is wholesale!',
+  'Minimum wholesale quantity is required if the product is wholesale!' => 'Minimum wholesale quantity is required if the product is wholesale!',
+  'Category is required!' => 'Category is required!',
+  'quantity_must_be_equal_or_less_than 1' => 'Quantity must be equal or less than 1',
 );
