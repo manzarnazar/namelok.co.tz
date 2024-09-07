@@ -9,19 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->boolean('is_wholesale')->default(false);
-        });
+        if (!Schema::hasColumn('order_details', 'is_wholesale')) {
+            Schema::table('order_details', function (Blueprint $table) {
+                $table->boolean('is_wholesale')->default(0)->after('another_column');
+            });
+        }
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    
+    public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             $table->dropColumn('is_wholesale');
         });
     }
