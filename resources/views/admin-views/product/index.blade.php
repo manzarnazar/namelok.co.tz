@@ -363,6 +363,10 @@
                             <label for="expiry_date">Wholesale Expiry Date:</label>
                             <input type="date" name="wholesale_expiry_date" id="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
                         </div>
+                        <div class="form-group">
+                            <label for="waitlist_note">{{ translate('Waitlist Note') }}</label>
+                            <textarea name="waitlist_note" id="waitlist_note" class="form-control" placeholder="Enter any additional note for the waitlist"></textarea>
+                        </div>
 
                     </div>
                 </div>

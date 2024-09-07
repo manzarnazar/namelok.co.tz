@@ -166,17 +166,20 @@ class ProductController extends Controller
         'images' => 'required',
         'total_stock' => 'required|numeric|min:1',
         'price' => 'required|numeric|min:0',
-        'is_wholesale' => 'required|boolean',  // Validation for is_wholesale
-        'minimum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true',  // Validation for minimum_wholesale_qty
-        'maximum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true|gte:minimum_wholesale_qty',  // Validation for maximum_wholesale_qty
-        'wholesale_expiry_date' => 'nullable|date|required_if:is_wholesale,true',  // Validation for wholesale_expiry_date
+        'is_wholesale' => 'required|boolean',
+        'minimum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true',
+        'maximum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true|gte:minimum_wholesale_qty',
+        'wholesale_expiry_date' => 'nullable|date|required_if:is_wholesale,true',
+        'waitlist_note' => 'nullable|string|max:255|required_if:is_wholesale,true',
     ], [
         'name.required' => translate('Product name is required!'),
         'category_id.required' => translate('Category is required!'),
         'minimum_wholesale_qty.required_if' => translate('Minimum wholesale quantity is required if the product is wholesale!'),
         'maximum_wholesale_qty.required_if' => translate('Maximum wholesale quantity is required if the product is wholesale!'),
         'wholesale_expiry_date.required_if' => translate('Wholesale expiry date is required if the product is wholesale!'),
+        'waitlist_note.required_if' => translate('Waitlist note is required if the product is wholesale!'),
     ]);
+    
 
     if ($request['discount_type'] == 'percent') {
         $discount = ($request['price'] / 100) * $request['discount'];
@@ -317,6 +320,8 @@ class ProductController extends Controller
     $product->minimum_wholesale_qty = $request->minimum_wholesale_qty;
     $product->maximum_wholesale_qty = $request->maximum_wholesale_qty;
     $product->wholesale_expiry_date = $request->wholesale_expiry_date;
+    $product->waitlist_note = $request->waitlist_note;  // New field for waitlist note
+
 
     $product->save();
 
