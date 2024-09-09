@@ -73,7 +73,7 @@ class OrderController extends Controller
 
     if ($status === 'wholesale') {
         $query->where('is_wholesale', 1);
-        dd($$query->where('is_wholesale', 1));
+        dd($status);
     } elseif ($status != 'all') {
         $query->where(['order_status' => $status]);
     }
