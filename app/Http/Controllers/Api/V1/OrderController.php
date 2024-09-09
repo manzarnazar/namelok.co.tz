@@ -227,6 +227,12 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
             $orderId = 100000 + Order::all()->count() + 1;
+            $isWholesale = 0;
+
+        foreach ($request['cart'] as $c) {
+            $product = $this->product->find($c['product_id']);
+            $isWholesale = $product['is_wholesale'] == 1 ? 1 : $isWholesale;
+        }
             $or = [
                 'id' => $orderId,
                 'user_id' => $userId,
@@ -253,6 +259,7 @@ class OrderController extends Controller
                 'free_delivery_amount' => $freeDeliveryAmount,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'is_wholesale' => $isWholesale
             ];
 
             $orderTimeSlotId = $or['time_slot_id'];
