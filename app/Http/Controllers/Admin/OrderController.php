@@ -70,7 +70,7 @@ class OrderController extends Controller
             });
 
         if ($status != 'all') {
-            $query->where(['is_wholesale'=>1])->get();
+            $query->all()->get();
 
         }
 
