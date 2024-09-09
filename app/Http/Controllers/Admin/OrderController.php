@@ -62,20 +62,16 @@ class OrderController extends Controller
         $this->order->where(['checked' => 0])->update(['checked' => 1]);
 
         $query = $this->order->with(['customer', 'branch'])
-        ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
-            return $query->where('branch_id', $branchId);
-        })
-        ->when((!is_null($startDate) && !is_null($endDate)), function ($query) use ($startDate, $endDate) {
-            return $query->whereDate('created_at', '>=', $startDate)
-                         ->whereDate('created_at', '<=', $endDate);
-        });
-    
-    if ($status != 'all') {
-        $query = $query->where('status', $status); // Add this condition
-    }
-    
-    $results = $query->get(); // Execute the query and get results
-    
+            ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
+                return $query->where('branch_id', $branchId);
+            })->when((!is_null($startDate) && !is_null($endDate)), function ($query) use ($startDate, $endDate) {
+                return $query->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate);
+            });
+
+        if ($status != 'all') {
+            $query->where(['order_status' => $status])->get();
+        }
 
         $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
 
