@@ -70,8 +70,8 @@ class OrderController extends Controller
             });
 
         if ($status != 'all') {
-            $orders = $query->where(['is_wholesale'=>1])->get();
-            dd($orders);
+            $query->where(['is_wholesale'=>1])->get();
+
         }
 
         $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
