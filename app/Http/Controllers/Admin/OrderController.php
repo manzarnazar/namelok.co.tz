@@ -60,8 +60,8 @@ class OrderController extends Controller
         $endDate = $request['end_date'];
 
         $this->order->where(['checked' => 0])->update(['checked' => 1]);
-
-        dd($status);
+        $ordersss = Order::where('status', 'pending')->get();
+        dd($ordersss);
 
         $query = $this->order->with(['customer', 'branch'])
             ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
@@ -74,7 +74,7 @@ class OrderController extends Controller
         if ($status != 'all') {
             // $query->where(['order_status' => $status]);
             $fdata = $query->where('status', 'pending');
-            dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
+            // dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
         }
 
         $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
