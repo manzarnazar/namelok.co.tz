@@ -69,15 +69,9 @@ class OrderController extends Controller
                     ->whereDate('created_at', '<=', $endDate);
             });
 
-        if ($status == "wholesale") {
-
-        $query->where(['order_status' => $status]);
-                
-    
-        }
-        elseif ($status != 'all') {
-            $query->where(['order_status' => $status]);
-            
+        if ($status != 'all') {
+            $orders = Order::where(['is_wholesale'=>1]);
+            dd($orders);
         }
 
         $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
