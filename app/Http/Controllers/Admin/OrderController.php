@@ -51,62 +51,62 @@ class OrderController extends Controller
      */
     public function list(Request $request, $status): View|Factory|Application
     {
-        $queryParam = [];
-        $search = $request['search'];
+        // $queryParam = [];
+        // $search = $request['search'];
 
-        $branches = $this->branch->all();
-        $branchId = $request['branch_id'];
-        $startDate = $request['start_date'];
-        $endDate = $request['end_date'];
+        // $branches = $this->branch->all();
+        // $branchId = $request['branch_id'];
+        // $startDate = $request['start_date'];
+        // $endDate = $request['end_date'];
 
         $this->order->where(['checked' => 0])->update(['checked' => 1]);
         $ordersss = Order::where('status', $status)->get();
         dd($ordersss);
 
-        $query = $this->order->with(['customer', 'branch'])
-            ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
-                return $query->where('branch_id', $branchId);
-            })->when((!is_null($startDate) && !is_null($endDate)), function ($query) use ($startDate, $endDate) {
-                return $query->whereDate('created_at', '>=', $startDate)
-                    ->whereDate('created_at', '<=', $endDate);
-            });
+        // // $query = $this->order->with(['customer', 'branch'])
+        // //     ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
+        // //         return $query->where('branch_id', $branchId);
+        // //     })->when((!is_null($startDate) && !is_null($endDate)), function ($query) use ($startDate, $endDate) {
+        // //         return $query->whereDate('created_at', '>=', $startDate)
+        // //             ->whereDate('created_at', '<=', $endDate);
+        // //     });
 
-        if ($status != 'all') {
-            // $query->where(['order_status' => $status]);
-            $fdata = $query->where('status', 'pending');
-            // dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
-        }
+        // // if ($status != 'all') {
+        // //     // $query->where(['order_status' => $status]);
+        // //     $fdata = $query->where('status', 'pending');
+        // //     // dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
+        // // }
 
-        $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
+        // $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
 
-        if ($request->has('search')) {
-            $key = explode(' ', $request['search']);
-            $query->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('id', 'like', "%{$value}%")
-                        ->orWhere('order_status', 'like', "%{$value}%")
-                        ->orWhere('payment_status', 'like', "{$value}%");
-                }
-            });
-            $queryParam['search'] = $search;
-        }
+        // if ($request->has('search')) {
+        //     $key = explode(' ', $request['search']);
+        //     $query->where(function ($q) use ($key) {
+        //         foreach ($key as $value) {
+        //             $q->orWhere('id', 'like', "%{$value}%")
+        //                 ->orWhere('order_status', 'like', "%{$value}%")
+        //                 ->orWhere('payment_status', 'like', "{$value}%");
+        //         }
+        //     });
+        //     $queryParam['search'] = $search;
+        // }
 
-        $orders = $query->notPos()->orderBy('id', 'desc')->paginate(Helpers::getPagination())->appends($queryParam);
+        // $orders = $query->notPos()->orderBy('id', 'desc')->paginate(Helpers::getPagination())->appends($queryParam);
 
-        $countData = [];
-        $orderStatuses = ['pending', 'confirmed', 'processing', 'out_for_delivery', 'delivered', 'canceled', 'returned', 'failed'];
+        // $countData = [];
+        // $orderStatuses = ['pending', 'confirmed', 'processing', 'out_for_delivery', 'delivered', 'canceled', 'returned', 'failed'];
 
-        foreach ($orderStatuses as $orderStatus) {
-            $countData[$orderStatus] = $this->order->notPos()->where('order_status', $orderStatus)
-                ->when(!is_null($branchId) && $branchId != 'all', function ($query) use ($branchId) {
-                    return $query->where('branch_id', $branchId);
-                })
-                ->when(!is_null($startDate) && !is_null($endDate), function ($query) use ($startDate, $endDate) {
-                    return $query->whereDate('created_at', '>=', $startDate)
-                        ->whereDate('created_at', '<=', $endDate);
-                })
-                ->count();
-        }
+        // foreach ($orderStatuses as $orderStatus) {
+        //     $countData[$orderStatus] = $this->order->notPos()->where('order_status', $orderStatus)
+        //         ->when(!is_null($branchId) && $branchId != 'all', function ($query) use ($branchId) {
+        //             return $query->where('branch_id', $branchId);
+        //         })
+        //         ->when(!is_null($startDate) && !is_null($endDate), function ($query) use ($startDate, $endDate) {
+        //             return $query->whereDate('created_at', '>=', $startDate)
+        //                 ->whereDate('created_at', '<=', $endDate);
+        //         })
+        //         ->count();
+        // }
 
         return view('admin-views.order.list', compact('orders', 'status', 'search', 'branches', 'branchId', 'startDate', 'endDate', 'countData'));
     }
