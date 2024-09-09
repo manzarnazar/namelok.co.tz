@@ -72,8 +72,8 @@ class OrderController extends Controller
         });
 
     if ($status === 'wholesale') {
-        $fdata = $query->where('is_wholesale', 1);
-        dd($fdata->toSql(), $fdata->getBindings());
+        $fdata = $query->where('is_wholesale', 1)->get();
+        dd($fdata);
     } elseif ($status != 'all') {
         $query->where(['order_status' => $status]);
     }
