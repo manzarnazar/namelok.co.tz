@@ -61,7 +61,8 @@ class OrderController extends Controller
 
     $this->order->where(['checked' => 0])->update(['checked' => 1]);
 
-    echo $status;
+    dd($status);
+
 
     $query = $this->order->with(['customer', 'branch'])
         ->when((!is_null($branchId) && $branchId != 'all'), function ($query) use ($branchId) {
