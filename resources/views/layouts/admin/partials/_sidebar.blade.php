@@ -215,7 +215,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                     {{-- @if($is_wholesale == 1) <!-- Adjust according to how $is_wholesale is set --> --}}
+
                                      <li class="nav-item {{Request::is('admin/orders/list/wholesale')?'active':''}}">
                                         <a class="nav-link " href="{{route('admin.orders.list',['wholesale'])}}" title="{{translate('wholesale_orders')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
@@ -227,7 +227,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    {{-- @endif --}}
+
                                 </ul>
                             </li>
                         @endif
