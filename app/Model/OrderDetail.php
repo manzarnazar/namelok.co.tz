@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
+    protected $fillable = [
+        // other columns
+        'is_wholesale',
+    ];
     protected $casts = [
         'product_id' => 'integer',
         'order_id' => 'integer',

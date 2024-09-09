@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = [
+        // other columns
+        'is_wholesale',
+    ];
     protected $casts = [
         'order_amount'           => 'float',
         'checked'                => 'integer',
