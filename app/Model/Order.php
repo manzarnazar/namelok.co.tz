@@ -31,6 +31,7 @@ class Order extends Model
         'delivery_address'       => 'array',
         'delivery_date'          => 'date',
         'free_delivery_amount'   => 'float',
+        'is_wholesale'           =>  'integer'
     ];
 
     public function details(): \Illuminate\Database\Eloquent\Relations\HasMany
