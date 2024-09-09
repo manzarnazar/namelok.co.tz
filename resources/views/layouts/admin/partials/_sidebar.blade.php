@@ -216,10 +216,10 @@
                                         </a>
                                     </li>
                                      <li class="nav-item {{Request::is('admin/orders/list/wholesale')?'active':''}}">
-                                        <a class="nav-link " href="{{route('admin.orders.list',['wholesale'])}}" title="{{translate('Waitlist Orders')}}">
+                                        <a class="nav-link " href="{{route('admin.orders.list',['wholesale'])}}" title="{{translate('Waitlist_orders')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate sidebar--badge-container">
-                                                <span>{{translate('wholesale')}}</span>
+                                                <span>{{translate('Waitlist Orders')}}</span>
                                                 <span class="badge badge-soft-danger badge-pill ml-1">
                                                     {{\App\Model\Order::where(['is_wholesale'=>1])->count()}}
                                                 </span>
