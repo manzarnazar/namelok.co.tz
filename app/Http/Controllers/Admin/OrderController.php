@@ -71,7 +71,7 @@ class OrderController extends Controller
 
         if ($status != 'all') {
             $fdata = $query->where(['order_status' => $status]);
-            dd($fdata->toSql(), $fdata->getBindings());
+            dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
         }
 
         $queryParam = ['branch_id' => $branchId, 'start_date' => $startDate, 'end_date' => $endDate];
