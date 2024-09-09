@@ -107,7 +107,6 @@ class OrderController extends Controller
         return view('admin-views.order.list', compact('orders', 'status', 'search', 'branches', 'branchId', 'startDate', 'endDate', 'countData'));
     }
 
-
     /**
      * @param $id
      * @return View|Factory|RedirectResponse|Application
