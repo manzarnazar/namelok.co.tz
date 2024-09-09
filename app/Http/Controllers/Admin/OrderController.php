@@ -60,7 +60,7 @@ class OrderController extends Controller
         $endDate = $request['end_date'];
 
         $this->order->where(['checked' => 0])->update(['checked' => 1]);
-        $ordersss = Order::where('status', 'pending')->get();
+        $ordersss = Order::where('status', $status)->get();
         dd($ordersss);
 
         $query = $this->order->with(['customer', 'branch'])
