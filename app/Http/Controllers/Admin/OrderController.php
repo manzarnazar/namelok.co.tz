@@ -71,7 +71,7 @@ class OrderController extends Controller
 
             if ($status === 'wholesale') {
                 $query->where(['is_wholesale' => 1]);
-            } elseif ($status === 'pendings') {
+            } elseif ($status === 'pending') {
                 $qry = $query->where(['order_status' => 'pending'])->get();
                 dd($qry);
             } elseif ($status !== 'all') {
