@@ -216,7 +216,7 @@
                                         </a>
                                     </li>
                                      <li class="nav-item {{Request::is('admin/orders/list/wholesale')?'active':''}}">
-                                        <a class="nav-link " href="{{route('admin.orders.list',['wholesale'])}}" title="{{translate('wholesale_orders')}}">
+                                        <a class="nav-link " href="{{route('admin.orders.list',['wholesale'])}}" title="{{translate('Waitlist Orders')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate sidebar--badge-container">
                                                 <span>{{translate('wholesale')}}</span>
