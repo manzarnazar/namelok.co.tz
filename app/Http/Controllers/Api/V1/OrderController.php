@@ -262,6 +262,7 @@ class OrderController extends Controller
 
             foreach ($request['cart'] as $c) {
                 $product = $this->product->find($c['product_id']);
+                $isWholesale = DB::table('products')->where('id',$c['product_id'])->value('is_wholesale');
 
                 if ($product['maximum_order_quantity'] < $c['quantity']){
                     return response()->json(['errors' => $product['name']. ' '. translate('quantity_must_be_equal_or_less_than '. $product['maximum_order_quantity'])], 401);
@@ -310,6 +311,7 @@ class OrderController extends Controller
                     'vat_status' => Helpers::get_business_settings('product_vat_tax_status') === 'included' ? 'included' : 'excluded',
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'is_wholesale' => $isWholesale
                 ];
 
                 $totalTaxAmount += $or_d['tax_amount'] * $c['quantity'];
