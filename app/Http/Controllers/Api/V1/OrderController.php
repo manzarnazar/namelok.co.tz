@@ -114,51 +114,47 @@ class OrderController extends Controller
             'is_partial' => 'required|in:0,1',
             'order_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
+    
         if (count($request['cart']) <1) {
             return response()->json(['errors' => [['code' => 'empty-cart', 'message' => translate('cart is empty')]]], 403);
         }
-
+    
         $userId = (bool)auth('api')->user() ? auth('api')->user()->id : $request->header('guest-id');
         $userType = (bool)auth('api')->user() ? 0 : 1;
-
+    
         if(auth('api')->user()){
             $customer = $this->user->find(auth('api')->user()->id);
         }
-
+    
         $minimumAmount = Helpers::get_business_settings('minimum_order_value');
         if ($minimumAmount > $request['order_amount']){
             $errors = [];
             $errors[] = ['code' => 'auth-001', 'message' => 'Order amount must be equal or more than '. $minimumAmount];
             return response()->json(['errors' => $errors], 401);
         }
-
+    
         $maximumAmount = Helpers::get_business_settings('maximum_amount_for_cod_order');
         if ($request->payment_method == 'cash_on_delivery' && Helpers::get_business_settings('maximum_amount_for_cod_order_status') == 1 && ($maximumAmount < $request['order_amount'])){
             $errors = [];
             $errors[] = ['code' => 'auth-001', 'message' => 'For Cash on Delivery, order amount must be equal or less than '. $maximumAmount];
             return response()->json(['errors' => $errors], 401);
         }
-
-        $userId = (bool)auth('api')->user() ? auth('api')->user()->id : $request->header('guest-id');
-        $userType = (bool)auth('api')->user() ? 0 : 1;
-
-
+    
         if($request->payment_method == 'wallet_payment' && Helpers::get_business_settings('wallet_status') != 1)
         {
             return response()->json(['errors' => [['code' => 'payment_method', 'message' => translate('customer_wallet_status_is_disable')]]], 403);
         }
-
+    
         if($request->payment_method == 'wallet_payment' && $customer->wallet_balance < $request['order_amount'])
         {
             return response()->json([
                 'errors' => [['code' => 'payment_method', 'message' => translate('you_do_not_have_sufficient_balance_in_wallet')]]], 403);
         }
-
+    
         if ($request['is_partial'] == 1) {
             if (Helpers::get_business_settings('wallet_status') != 1){
                 return response()->json(['errors' => [['code' => 'payment_method', 'message' => translate('customer_wallet_status_is_disable')]]], 403);
@@ -170,7 +166,7 @@ class OrderController extends Controller
                 return response()->json(['errors' => [['code' => 'payment_method', 'message' => translate('since your wallet balance is less than 1, you can not place partial order')]]], 403);
             }
         }
-
+    
         foreach ($request['cart'] as $c) {
             $product = $this->product->find($c['product_id']);
             if (count(json_decode($product['variations'], true)) > 0) {
@@ -186,12 +182,11 @@ class OrderController extends Controller
                 }
             }
         }
-
+    
         if ($validator->getMessageBag()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
-
+    
         $freeDeliveryAmount = 0;
         if ($request['order_type'] == 'self_pickup'){
             $deliveryCharge = 0;
@@ -201,9 +196,9 @@ class OrderController extends Controller
         } else{
             $deliveryCharge = Helpers::get_delivery_charge($request['distance']);
         }
-
+    
         $coupon = $this->coupon->active()->where(['code' => $request['coupon_code']])->first();
-
+    
         if (isset($coupon)) {
             if ($coupon['coupon_type'] == 'free_delivery') {
                 $freeDeliveryAmount = Helpers::get_delivery_charge($request['distance']);
@@ -215,18 +210,20 @@ class OrderController extends Controller
         }else{
             $couponDiscount = $request['coupon_discount_amount'];
         }
-
+    
         if ($request['is_partial'] == 1) {
             $paymentStatus = ($request->payment_method == 'cash_on_delivery' || $request->payment_method == 'offline_payment') ? 'partially_paid' : 'paid';
         } else {
             $paymentStatus = ($request->payment_method == 'cash_on_delivery' || $request->payment_method == 'offline_payment') ? 'unpaid' : 'paid';
         }
-
+    
         $orderStatus = ($request->payment_method == 'cash_on_delivery' || $request->payment_method == 'offline_payment') ? 'pending' : 'confirmed';
-
+    
         try {
             DB::beginTransaction();
             $orderId = 100000 + Order::all()->count() + 1;
+            $isWholesale = 0; // Default value for is_wholesale
+    
             $or = [
                 'id' => $orderId,
                 'user_id' => $userId,
@@ -251,180 +248,86 @@ class OrderController extends Controller
                 'payment_by' => $request['payment_method'] == 'offline_payment' ? $request['payment_by'] : null,
                 'payment_note' => $request['payment_method'] == 'offline_payment' ? $request['payment_note'] : null,
                 'free_delivery_amount' => $freeDeliveryAmount,
+                'is_wholesale' => $isWholesale, // Add this line
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-
+    
             $orderTimeSlotId = $or['time_slot_id'];
             $orderDeliveryDate = $or['delivery_date'];
-
+    
             $totalTaxAmount = 0;
-
+    
             foreach ($request['cart'] as $c) {
                 $product = $this->product->find($c['product_id']);
-
+    
                 if ($product['maximum_order_quantity'] < $c['quantity']){
-                    return response()->json(['errors' => $product['name']. ' '. translate('quantity_must_be_equal_or_less_than '. $product['maximum_order_quantity'])], 401);
+                    return response()->json(['errors' => $product['name']. ' '. translate('quantity_must_be_equal_or_less_than '. $product['maximum_order_quantity'])], 403);
                 }
-
-                if (count(json_decode($product['variations'], true)) > 0) {
-                    $price = Helpers::variation_price($product, json_encode($c['variation']));
+                if (isset($product['variations']) && count(json_decode($product['variations'], true)) > 0) {
+                    $type = $c['variation'][0]['type'];
+                    $price = 0;
+                    foreach (json_decode($product['variations'], true) as $var) {
+                        if ($type == $var['type']) {
+                            $price = $var['price'];
+                            if ($var['stock'] < $c['quantity']) {
+                                return response()->json(['errors' => [['code' => 'stock', 'message' => 'Stock is insufficient for '.$product['name']]]], 403);
+                            }
+                        }
+                    }
                 } else {
-                    $price = $product['price'];
-                }
-
-                $tax_on_product = Helpers::tax_calculate($product, $price);
-
-                $category_id = null;
-                foreach (json_decode($product['category_ids'], true) as $cat) {
-                    if ($cat['position'] == 1){
-                        $category_id = ($cat['id']);
+                    $price = $product['unit_price'];
+                    if ($product['total_stock'] < $c['quantity']) {
+                        return response()->json(['errors' => [['code' => 'stock', 'message' => 'Stock is insufficient for '.$product['name']]]], 403);
                     }
                 }
-
-                $category_discount = Helpers::category_discount_calculate($category_id, $price);
-                $product_discount = Helpers::discount_calculate($product, $price);
-                if ($category_discount >= $price){
-                    $discount = $product_discount;
-                    $discount_type = 'discount_on_product';
-                }else{
-                    $discount = max($category_discount, $product_discount);
-                    $discount_type = $product_discount > $category_discount ? 'discount_on_product' : 'discount_on_category';
-                }
-
-                $or_d = [
+    
+                $tax = $product['tax'];
+                $totalTaxAmount += ($price * $c['quantity'] * $tax / 100);
+    
+                $productPrice = $price;
+                $totalAmount = $productPrice * $c['quantity'];
+    
+                $orderDetail = [
                     'order_id' => $orderId,
                     'product_id' => $c['product_id'],
-                    'time_slot_id' => $orderTimeSlotId,
-                    'delivery_date' => $orderDeliveryDate,
-                    'product_details' => $product,
                     'quantity' => $c['quantity'],
-                    'price' => $price,
-                    'unit' => $product['unit'],
-                    'tax_amount' => $tax_on_product,
-                    'discount_on_product' => $discount,
-                    'discount_type' => $discount_type,
-                    'variant' => json_encode($c['variant']),
-                    'variation' => json_encode($c['variation']),
-                    'is_stock_decreased' => 1,
-                    'vat_status' => Helpers::get_business_settings('product_vat_tax_status') === 'included' ? 'included' : 'excluded',
+                    'price' => $productPrice,
+                    'total_amount' => $totalAmount,
+                    'tax' => $tax,
+                    'is_wholesale' => $isWholesale, // Add this line
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-
-                $totalTaxAmount += $or_d['tax_amount'] * $c['quantity'];
-
-                $type = $c['variation'][0]['type'];
-                $variationStore = [];
-                foreach (json_decode($product['variations'], true) as $var) {
-                    if ($type == $var['type']) {
-                        $var['stock'] -= $c['quantity'];
-                    }
-                    $variationStore[] = $var;
-                }
-
-                $this->product->where(['id' => $product['id']])->update([
-                    'variations' => json_encode($variationStore),
-                    'total_stock' => $product['total_stock'] - $c['quantity'],
-                    'popularity_count'=>$product['popularity_count']+1
-                ]);
-
-                DB::table('order_details')->insert($or_d);
+    
+                OrderDetail::create($orderDetail);
             }
-            $or['total_tax_amount'] = $totalTaxAmount;
-            DB::table('orders')->insertGetId($or);
-
-            if($request->payment_method == 'wallet_payment'){
-                $amount = $or['order_amount'];
-                CustomerLogic::create_wallet_transaction($or['user_id'], $amount, 'order_place', $or['id']);
-            }
-
-            if ($request->payment_method == 'offline_payment') {
-                $offlinePayment = new OfflinePayment();
-                $offlinePayment->order_id = $or['id'];
-                $offlinePayment->payment_info = json_encode($request['payment_info']);
-                $offlinePayment->save();
-            }
-
-            if ($request['is_partial'] == 1){
-                $totalOrderAmount = $or['order_amount'];
-                $walletAmount = $customer->wallet_balance;
-                $dueAmount = $totalOrderAmount - $walletAmount;
-
-                $walletTransaction = CustomerLogic::create_wallet_transaction($or['user_id'], $walletAmount, 'order_place', $or['id']);
-
-                $partial = new OrderPartialPayment();
-                $partial->order_id = $or['id'];
-                $partial->paid_with = 'wallet_payment';
-                $partial->paid_amount = $walletAmount;
-                $partial->due_amount = $dueAmount;
-                $partial->save();
-
-                if ($request['payment_method'] != 'cash_on_delivery'){
-                    $partial = new OrderPartialPayment;
-                    $partial->order_id = $or['id'];
-                    $partial->paid_with = $request['payment_method'];
-                    $partial->paid_amount = $dueAmount;
-                    $partial->due_amount = 0;
-                    $partial->save();
+    
+            $orderAmount = $request['order_amount'];
+            $totalAmount = $orderAmount + $totalTaxAmount;
+    
+            $order = Order::create($or);
+    
+            if (isset($request['order_images']) && count($request['order_images']) > 0) {
+                foreach ($request['order_images'] as $orderImage) {
+                    $imageName = time() . '.' . $orderImage->extension();
+                    $orderImage->move(public_path('images/order_images'), $imageName);
+                    OrderImage::create([
+                        'order_id' => $order->id,
+                        'image' => $imageName,
+                    ]);
                 }
             }
-
-            if (Helpers::get_business_settings('order_image_status') == 1 && !empty($request->file('order_images'))){
-                self::uploadOrderImage(orderImages: $request->order_images, orderId: $orderId);
-            }
-
+    
             DB::commit();
-
-            if ((bool)auth('api')->user()){
-                $customerFcmToken = auth('api')->user()->cm_firebase_token;
-                $languageCode = auth('api')->user()->language_code ?? 'en';
-            }else{
-                $guest = GuestUser::find($request->header('guest-id'));
-                $customerFcmToken = $guest ? $guest->fcm_token : '';
-                $languageCode = $guest ? $guest->language_code : 'en';
-            }
-
-            $orderStatusMessage = ($request->payment_method == 'cash_on_delivery' || $request->payment_method == 'offline_payment') ? 'pending':'confirmed';
-            $message = Helpers::order_status_update_message($orderStatusMessage);
-
-            if ($languageCode != 'en'){
-                $message = $this->translate_message($languageCode, $orderStatusMessage);
-            }
-
-            $order = $this->order->find($orderId);
-            $value = $this->dynamic_key_replaced_message(message: $message, type: 'order', order: $order);
-
-            try {
-                if ($value) {
-                    $data = [
-                        'title' => 'Order',
-                        'description' => $value,
-                        'order_id' => $orderId,
-                        'image' => '',
-                        'type' => 'order'
-                    ];
-                    Helpers::send_push_notif_to_device($customerFcmToken, $data);
-                }
-
-                $emailServices = Helpers::get_business_settings('mail_config');
-                if (isset($emailServices['status']) && $emailServices['status'] == 1 && isset($customer->email)) {
-                    Mail::to($customer->email)->send(new OrderPlaced($orderId));
-                }
-
-            } catch (\Exception $e) {
-            }
-
-            return response()->json([
-                'message' => 'Order placed successfully!',
-                'order_id' => $orderId,
-            ], 200);
-
+            return response()->json(['message' => translate('order_placed_successfully')], 200);
+    
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([$e], 403);
+            return response()->json(['errors' => [['code' => 'server_error', 'message' => $e->getMessage()]]], 500);
         }
     }
+    
 
     /**
      * @param $orderImages
