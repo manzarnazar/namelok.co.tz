@@ -253,6 +253,7 @@ class OrderController extends Controller
                 'free_delivery_amount' => $freeDeliveryAmount,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'is_wholesale' => 1,
             ];
 
             $orderTimeSlotId = $or['time_slot_id'];
