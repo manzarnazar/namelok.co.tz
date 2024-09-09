@@ -69,7 +69,7 @@ class OrderController extends Controller
                     ->whereDate('created_at', '<=', $endDate);
             });
 
-            if ($status === 'wholesale') {
+            if ($status === 'waitlist') {
                 $query->where(['is_wholesale' => 1]);
             
             } elseif ($status !== 'all') {
