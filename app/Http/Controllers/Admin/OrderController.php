@@ -69,7 +69,7 @@ class OrderController extends Controller
                     ->whereDate('created_at', '<=', $endDate);
             });
 
-        if ($status == 'all') {
+        if ($status != 'all') {
             $fdata = $query->where(['order_status' => $status]);
             dd($fdata->toSql(), $fdata->getBindings(), $fdata->get());
         }
