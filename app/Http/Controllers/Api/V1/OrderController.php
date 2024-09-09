@@ -223,6 +223,7 @@ class OrderController extends Controller
         }
 
         $orderStatus = ($request->payment_method == 'cash_on_delivery' || $request->payment_method == 'offline_payment') ? 'pending' : 'confirmed';
+       
 
         try {
             DB::beginTransaction();
@@ -253,7 +254,7 @@ class OrderController extends Controller
                 'free_delivery_amount' => $freeDeliveryAmount,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'is_wholesale' => 1,
+
             ];
 
             $orderTimeSlotId = $or['time_slot_id'];
@@ -292,7 +293,8 @@ class OrderController extends Controller
                     $discount = max($category_discount, $product_discount);
                     $discount_type = $product_discount > $category_discount ? 'discount_on_product' : 'discount_on_category';
                 }
-
+                $product = Product::find($$c['product_id']); // Find the product with id 2
+                $isWholesale = $product->is_wholesale;
                 $or_d = [
                     'order_id' => $orderId,
                     'product_id' => $c['product_id'],
@@ -311,6 +313,7 @@ class OrderController extends Controller
                     'vat_status' => Helpers::get_business_settings('product_vat_tax_status') === 'included' ? 'included' : 'excluded',
                     'created_at' => now(),
                     'updated_at' => now(),
+                    'is_wholesale' => $isWholesale
                 ];
 
                 $totalTaxAmount += $or_d['tax_amount'] * $c['quantity'];
