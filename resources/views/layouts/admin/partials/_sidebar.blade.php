@@ -118,6 +118,21 @@
                                             </span>
                                         </a>
                                     </li>
+                                    
+                                    
+                                     <li class="nav-item {{Request::is('admin/orders/list/waitlist')?'active':''}}">
+                                        <a class="nav-link " href="{{route('admin.orders.list',['waitlist'])}}" title="{{translate('Waitlist_orders')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate sidebar--badge-container">
+                                                <span>{{translate('Waitlist Orders')}}</span>
+                                                <span class="badge badge-soft-danger badge-pill ml-1">
+                                                    {{\App\Model\Order::where(['is_wholesale'=>1])->count()}}
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    
+                                    
                                     <li class="nav-item {{Request::is('admin/orders/list/pending')?'active':''}}">
                                         <a class="nav-link " href="{{route('admin.orders.list',['pending'])}}"
                                            title="{{translate('pending_orders')}}">
@@ -215,17 +230,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                     <li class="nav-item {{Request::is('admin/orders/list/waitlist')?'active':''}}">
-                                        <a class="nav-link " href="{{route('admin.orders.list',['waitlist'])}}" title="{{translate('Waitlist_orders')}}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate sidebar--badge-container">
-                                                <span>{{translate('Waitlist Orders')}}</span>
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{\App\Model\Order::where(['is_wholesale'=>1])->count()}}
-                                                </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                    
                                 </ul>
                             </li>
                         @endif
@@ -348,7 +353,7 @@
                                         class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('coupons')}}</span>
                                 </a>
                             </li>
-
+<!--
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/notification*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.notification.add-new')}}"
@@ -360,6 +365,7 @@
                                     </span>
                                 </a>
                             </li>
+-->
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/offer*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.offer.flash.index')}}"
@@ -381,7 +387,7 @@
                                 </a>
                             </li>
                         @endif
-
+<!--
                         @if(Helpers::module_permission_check(MANAGEMENT_SECTION['support_management']))
                             <li class="nav-item">
                                 <small class="nav-subtitle"
@@ -401,7 +407,8 @@
                                 </a>
                             </li>
                         @endif
-
+-->
+<!--
                         @if(Helpers::module_permission_check(MANAGEMENT_SECTION['report_management']))
                             <li class="nav-item">
                                 <small class="nav-subtitle"
@@ -468,7 +475,7 @@
                                 </ul>
                             </li>
                         @endif
-
+-->
 
                         @if(Helpers::module_permission_check(MANAGEMENT_SECTION['user_management']))
                             <li class="nav-item">
@@ -488,7 +495,7 @@
                                     </span>
                                 </a>
                             </li>
-
+<!--
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/customer/wallet/*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                    href="javascript:" title="{{translate('Customer Wallet')}}">
@@ -537,7 +544,8 @@
 
                                 </ul>
                             </li>
-
+-->
+<!--
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/customer/loyalty-point*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                    href="javascript:" title="{{translate('Customer Loyalty Point')}}">
@@ -563,6 +571,7 @@
 
                                 </ul>
                             </li>
+-->
 
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/reviews*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
@@ -575,6 +584,7 @@
                                     </span>
                                 </a>
                             </li>
+        <!--
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/customer/subscribed-email*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.customer.subscribed_emails')}}"
@@ -585,6 +595,7 @@
                                     </span>
                                 </a>
                             </li>
+    -->
 
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/delivery-man/*')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
@@ -620,6 +631,9 @@
                                             </span>
                                         </a>
                                     </li>
+
+
+                                    
 
                                     <li class="nav-item {{Request::is('admin/delivery-man/pending/list') || Request::is('admin/delivery-man/denied/list')?'active':''}}">
                                         <a class="nav-link"
@@ -689,7 +703,7 @@
                             </li>
                             @endif
                         @endif
-
+<!--
                         @if(Helpers::module_permission_check(MANAGEMENT_SECTION['system_management']))
                             <li class="nav-item">
                                 <small class="nav-subtitle"
@@ -824,7 +838,8 @@
                                     </li>
                                 </ul>
                             </li>
-
+-->
+<!--
                             <li class="nav-item mt-0
                                 {{Request::is('admin/business-settings/web-app/system-setup*')?'active':''}}">
                                 <a class="nav-link"
@@ -837,7 +852,8 @@
                             </li>
 
                         @endif
-
+-->
+<!--
                         @if(Helpers::module_permission_check(MANAGEMENT_SECTION['addon_management']))
 
                             <li class="nav-item">
@@ -854,7 +870,7 @@
                                 </span>
                                 </a>
                             </li>
-
+-->
                             @if(count(config('addon_admin_routes'))>0)
                                 <li class="navbar-vertical-aside-has-menu {{Request::is('admin/payment/configuration/*') || Request::is('admin/sms/configuration/*')?'active':''}} mb-5">
                                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" >
