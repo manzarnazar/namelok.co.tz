@@ -178,7 +178,7 @@ class ProductController extends Controller
         'wholesale_expiry_date' => 'nullable|date|required_if:is_wholesale,true',
         'waitlist_note' => 'nullable|string|max:255|required_if:is_wholesale,true',
 
-        'is_collaboration' => 'required|boolean',
+        'is_collaboration' => 'nullable|boolean',
         'collab_waitlist_note' => 'nullable|string|max:255|required_if:is_collaboration,true',
         'last_date' => 'nullable|date|required_if:is_collaboration,true',
     ], [
