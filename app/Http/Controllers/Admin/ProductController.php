@@ -333,7 +333,6 @@ class ProductController extends Controller
     $product->total_stock = $request->total_stock;
     $product->status = $request->status ? $request->status : 0;
 
-    dd($request->is_wholesale);
     // New fields related to wholesale
     $product->is_wholesale = $request->is_wholesale;
     $product->minimum_wholesale_qty = $request->minimum_wholesale_qty;
