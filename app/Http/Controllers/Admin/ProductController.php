@@ -334,9 +334,9 @@ class ProductController extends Controller
     $product->status = $request->status ? $request->status : 0;
 
     // New fields related to wholesale
-    $product->is_wholesale = $request->is_wholesale;
-    $product->minimum_wholesale_qty = $request->minimum_wholesale_qty;
-    $product->maximum_wholesale_qty = $request->maximum_wholesale_qty;
+    $product->is_wholesale = $request->is_wholesale ?? 0;
+    $product->minimum_wholesale_qty = $request->minimum_wholesale_qty ?? 0;
+    $product->maximum_wholesale_qty = $request->maximum_wholesale_qty ?? 0;
     $product->wholesale_expiry_date = $request->wholesale_expiry_date;
     $product->waitlist_note = $request->waitlist_note;
 
@@ -344,12 +344,14 @@ class ProductController extends Controller
     // Save the product
     $product->save();
 
-    Collaboration::create([
-        'product_id' => $product->id,
-        'order_quantity' => $request->total_stock,
-        'last_date' => $request->last_date,
-        'note' => $request->collab_waitlist_note,
-    ]);
+    if ($request->is_collaboration == 1) {
+        Collaboration::create([
+            'product_id' => $product->id,
+            'order_quantity' => $request->total_stock,
+            'last_date' => $request->last_date,
+            'note' => $request->collab_waitlist_note,
+        ]);
+    }
 
 
 
