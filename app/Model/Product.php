@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
+    protected $with = ['collaboration'];
     protected $casts = [
         'tax'         => 'float',
         'price'       => 'float',
@@ -97,7 +98,9 @@ class Product extends Model
         }
         return $imageUrlArray;
     }
-
+    public function collaboration(){
+        return $this->hasOne(Collaboration::class,"product_id");
+    }
 
 
 

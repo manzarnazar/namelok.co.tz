@@ -2534,4 +2534,12 @@
   'Minimum wholesale quantity is required if the product is wholesale!' => 'Minimum wholesale quantity is required if the product is wholesale!',
   'Category is required!' => 'Category is required!',
   'quantity_must_be_equal_or_less_than 1' => 'Quantity must be equal or less than 1',
+  'Waitlist Orders' => 'Waitlist Orders',
+  'Waitlist_orders' => 'Waitlist orders',
+  'Waitlist Note' => 'Waitlist Note',
+  'Waitlist note is required if the product is wholesale!' => 'Waitlist note is required if the product is wholesale!',
+  'Collaboration' => 'Collaboration',
+  'Turning Collaboration will create offer on product Collaboration' => 'Turning Collaboration will create offer on product Collaboration',
+  'Last date is required for collaboration products!' => 'Last date is required for collaboration products!',
+  'Collaboration note is required if the product is Collaboration!' => 'Collaboration note is required if the product is Collaboration!',
 );

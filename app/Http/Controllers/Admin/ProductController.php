@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\BusinessSetting;
 use App\Model\Category;
+use App\Model\Collaboration;
 use App\Model\FlashDealProduct;
 use App\Model\Product;
 use App\Model\Review;
@@ -36,6 +37,7 @@ class ProductController extends Controller
         private BusinessSetting $business_setting,
         private Category $category,
         private Product $product,
+        private Collaboration $collaboration,
         private Review $review,
         private Tag $tag,
         private Translation $translation
@@ -128,13 +130,17 @@ class ProductController extends Controller
 
         foreach ($products as $product) {
             $totalSold = 0;
+        
             foreach ($product->order_details as $detail) {
-                if ($detail->order->order_status == 'delivered'){
+                // Check if order exists before accessing order_status
+                if ($detail->order && $detail->order->order_status == 'delivered') {
                     $totalSold += $detail->quantity;
                 }
             }
-             $product->total_sold = $totalSold;
+        
+            $product->total_sold = $totalSold;
         }
+        
 
         return view('admin-views.product.list', compact('products','search'));
     }
@@ -166,11 +172,15 @@ class ProductController extends Controller
         'images' => 'required',
         'total_stock' => 'required|numeric|min:1',
         'price' => 'required|numeric|min:0',
-        'is_wholesale' => 'required|boolean',
+        'is_wholesale' => 'nullable|boolean',
         'minimum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true',
         'maximum_wholesale_qty' => 'nullable|integer|min:1|required_if:is_wholesale,true|gte:minimum_wholesale_qty',
         'wholesale_expiry_date' => 'nullable|date|required_if:is_wholesale,true',
         'waitlist_note' => 'nullable|string|max:255|required_if:is_wholesale,true',
+
+        'is_collaboration' => 'required|boolean',
+        'collab_waitlist_note' => 'nullable|string|max:255|required_if:is_collaboration,true',
+        'last_date' => 'nullable|date|required_if:is_collaboration,true',
     ], [
         'name.required' => translate('Product name is required!'),
         'category_id.required' => translate('Category is required!'),
@@ -178,9 +188,13 @@ class ProductController extends Controller
         'maximum_wholesale_qty.required_if' => translate('Maximum wholesale quantity is required if the product is wholesale!'),
         'wholesale_expiry_date.required_if' => translate('Wholesale expiry date is required if the product is wholesale!'),
         'waitlist_note.required_if' => translate('Waitlist note is required if the product is wholesale!'),
-    ]);
-    
 
+        // Custom error messages for collaboration
+        'collaboration_minimum_qty.required_if' => translate('Collaboration note is required if the product is Collaboration!'),
+        'collaboration_last_date.required_if' => translate('Last date is required for collaboration products!'),
+    ]);
+
+    // Handle discount validation
     if ($request['discount_type'] == 'percent') {
         $discount = ($request['price'] / 100) * $request['discount'];
     } else {
@@ -191,6 +205,7 @@ class ProductController extends Controller
         $validator->getMessageBag()->add('unit_price', 'Discount cannot be more or equal to the price!');
     }
 
+    // Image handling
     $imageNames = [];
     if (!empty($request->file('images'))) {
         foreach ($request->images as $img) {
@@ -202,6 +217,7 @@ class ProductController extends Controller
         $imageData = json_encode([]);
     }
 
+    // Handle tags
     $tagIds = [];
     if ($request->tags != null) {
         $tags = explode(",", $request->tags);
@@ -214,6 +230,7 @@ class ProductController extends Controller
         }
     }
 
+    // Category handling
     $category = [];
     if ($request->category_id != null) {
         $category[] = [
@@ -234,6 +251,7 @@ class ProductController extends Controller
         ];
     }
 
+    // Choice options handling
     $choiceOptions = [];
     if ($request->has('choice')) {
         foreach ($request->choice_no as $key => $no) {
@@ -249,6 +267,7 @@ class ProductController extends Controller
         }
     }
 
+    // Variations and stock count logic
     $variations = [];
     $options = [];
     if ($request->has('choice_no')) {
@@ -312,7 +331,6 @@ class ProductController extends Controller
     $product->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
     $product->discount_type = $request->discount_type;
     $product->total_stock = $request->total_stock;
-    $product->attributes = $request->has('attribute_id') ? json_encode($request->attribute_id) : json_encode([]);
     $product->status = $request->status ? $request->status : 0;
 
     // New fields related to wholesale
@@ -320,13 +338,25 @@ class ProductController extends Controller
     $product->minimum_wholesale_qty = $request->minimum_wholesale_qty;
     $product->maximum_wholesale_qty = $request->maximum_wholesale_qty;
     $product->wholesale_expiry_date = $request->wholesale_expiry_date;
-    $product->waitlist_note = $request->waitlist_note;  // New field for waitlist note
+    $product->waitlist_note = $request->waitlist_note;
 
-
+    // New field for collaboration
+    // Save the product
     $product->save();
 
+    Collaboration::create([
+        'product_id' => $product->id,
+        'order_quantity' => $request->total_stock,
+        'last_date' => $request->last_date,
+        'note' => $request->collab_waitlist_note,
+    ]);
+
+
+
+    // Sync product tags
     $product->tags()->sync($tagIds);
 
+    // Handle translations
     $data = [];
     foreach ($request->lang as $index => $key) {
         if ($request->name[$index] && $key != 'en') {
@@ -353,6 +383,8 @@ class ProductController extends Controller
 
     return response()->json([], 200);
 }
+
+    
 
     /**
      * @param $id

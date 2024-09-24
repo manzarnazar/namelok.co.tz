@@ -33,6 +33,21 @@ class ProductLogic
             'products' => $paginator->items()
         ];
     }
+    public static function getCollaborationProducts($limit = 10, $offset = 1)
+    {
+        $paginator = Product::active()
+            ->withCount(['wishlist'])
+            ->whereHas('collaboration')
+            ->with(['rating', 'active_reviews'])
+            ->latest()->paginate($limit, ['*'], 'page', $offset);
+
+        return [
+            'total_size' => $paginator->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            'products' => $paginator->items()
+        ];
+    }
 
     public static function getFavoriteProducts($limit, $offset, $user_id)
     {

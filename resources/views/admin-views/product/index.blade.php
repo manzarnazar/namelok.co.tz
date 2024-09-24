@@ -373,6 +373,57 @@
                 </div>
             </div>
 
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="card-header-icon">
+                                <i class="tio-puzzle"></i>
+                            </span>
+                            <span>Collaboration</span>
+                        </h5>
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-wrap-reverse justify-content-between">
+                            <div class="w-200 flex-grow-1 mr-3">
+                                {{translate('Turning Collaboration will create offer on product Collaboration')}}
+                            </div>
+                            <div class="d-flex align-items-center mb-2 mb-sm-0">
+                                <h5 class="mb-0 mr-2">{{ translate('Collaboration') }}</h5>
+                                <label class="toggle-switch my-0">
+                                    <input type="checkbox" class="toggle-switch-input" name="is_collaboration" id="collaboration-toggle" value="1">
+                                    <span class="toggle-switch-label mx-auto text">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="col-lg-6" id="collaboration-fields" style="display: none;">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">Collaboration Options</h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="form-group">
+                            <label for="expiry_date">Collaboration Last Date:</label>
+                            <input type="date" name="last_date" id="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
+                        </div>
+                        {{-- waitlist note --}}
+                        <div class="form-group">
+                            <label for="waitlist_note">{{ translate('Waitlist Note') }}</label>
+                            <textarea name="collab_waitlist_note" id="collab_note" class="form-control" placeholder="Enter any additional note for the waitlist"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="btn--container justify-content-end">
                     <a href="" class="btn btn--reset min-w-120px">{{translate('reset')}}</a>
@@ -609,13 +660,29 @@
 
     <script>
 
-        document.getElementById('wholesale-toggle').addEventListener('change', function() {
+document.getElementById('wholesale-toggle').addEventListener('change', function() {
             var wholesaleFields = document.getElementById('wholesale-fields');
-            // document.getElementById('wholesale_expiry_group').style.display = this.checked ? 'block' : 'none';
+            var collaborationToggle = document.getElementById('collaboration-toggle');
+
             if (this.checked) {
                 wholesaleFields.style.display = 'block';
+                collaborationToggle.checked = false; // Turn off collaboration toggle
+                document.getElementById('collaboration-fields').style.display = 'none'; // Hide collaboration fields
             } else {
                 wholesaleFields.style.display = 'none';
+            }
+        });
+
+        document.getElementById('collaboration-toggle').addEventListener('change', function() {
+            var collaborationFields = document.getElementById('collaboration-fields');
+            var wholesaleToggle = document.getElementById('wholesale-toggle');
+
+            if (this.checked) {
+                collaborationFields.style.display = 'block';
+                wholesaleToggle.checked = false; // Turn off wholesale toggle
+                document.getElementById('wholesale-fields').style.display = 'none'; // Hide wholesale fields
+            } else {
+                collaborationFields.style.display = 'none';
             }
         });
 

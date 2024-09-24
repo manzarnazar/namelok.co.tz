@@ -67,6 +67,7 @@ class ProductController extends Controller
         }else{
             $products = ProductLogic::getLatestProducts($request['limit'], $request['offset']);
         }
+        
 
         $products['products'] = Helpers::product_data_formatting($products['products'], true);
         return response()->json($products, 200);
