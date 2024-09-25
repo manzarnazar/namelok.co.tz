@@ -470,11 +470,10 @@ class ProductController extends Controller
     public function collaborationProducts(Request $request): JsonResponse
 {
     try {
-        // Adjust the query to filter products with collaborations
         $paginator = $this->product->active()
             ->withCount(['wishlist'])
-            ->with(['rating', 'collaboration']) // Ensure collaboration relation is included
-            // ->whereNotNull('collaboration_id') // Filter products with collaboration
+            ->with(['rating', 'collaboration'])
+            ->whereHas('collaboration') // Filters products with collaboration
             ->orderBy('id', 'desc')
             ->paginate($request['limit'], ['*'], 'page', $request['offset']);
 
@@ -484,9 +483,8 @@ class ProductController extends Controller
             'offset' => $request['offset'],
             'products' => $paginator->items()
         ];
-        
-        // Format the product data
-        $paginator = Helpers::product_data_formatting($products['products'], true);
+
+        Helpers::product_data_formatting($products['products'], true);
 
         return response()->json($products, 200);
     } catch (\Exception $e) {
