@@ -467,6 +467,34 @@ class ProductController extends Controller
 
         return response()->json(['message' => translate('Item removed from favourite list! ')], 200);
     }
+    public function collaborationProducts(Request $request): JsonResponse
+{
+    try {
+        // Adjust the query to filter products with collaborations
+        $paginator = $this->product->active()
+            ->withCount(['wishlist'])
+            ->with(['rating', 'collaboration']) // Ensure collaboration relation is included
+            ->whereNotNull('collaboration_id') // Filter products with collaboration
+            ->orderBy('id', 'desc')
+            ->paginate($request['limit'], ['*'], 'page', $request['offset']);
+
+        $products = [
+            'total_size' => $paginator->total(),
+            'limit' => $request['limit'],
+            'offset' => $request['offset'],
+            'products' => $paginator->items()
+        ];
+        
+        // Format the product data
+        $paginator = Helpers::product_data_formatting($products['products'], true);
+
+        return response()->json($products, 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'errors' => ['code' => 'product-002', 'message' => 'Collaboration products not found!'],
+        ], 404);
+    }
+}
 
     /**
      * @param Request $request
@@ -524,6 +552,7 @@ class ProductController extends Controller
         ], 404);
     }
 }
+
 
 
     /**
