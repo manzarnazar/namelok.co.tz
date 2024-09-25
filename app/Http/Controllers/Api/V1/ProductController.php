@@ -472,8 +472,7 @@ class ProductController extends Controller
     try {
         $paginator = $this->product->active()
             ->withCount(['wishlist'])
-            ->with(['rating', 'collaboration'])
-            ->whereHas('collaboration') // Filters products with collaboration
+            ->whereHas('collaboration')
             ->orderBy('id', 'desc')
             ->paginate($request['limit'], ['*'], 'page', $request['offset']);
 
