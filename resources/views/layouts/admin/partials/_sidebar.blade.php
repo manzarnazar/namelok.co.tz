@@ -226,6 +226,17 @@
                                             </span>
                                         </a>
                                     </li>
+                                    <li class="nav-item {{Request::is('admin/orders/list/collaboration')?'active':''}}">
+                                        <a class="nav-link " href="{{route('admin.orders.list',['collaboration'])}}" title="{{translate('Waitlist_orders')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate sidebar--badge-container">
+                                                <span>{{translate('Waitlist Orders')}}</span>
+                                                <span class="badge badge-soft-danger badge-pill ml-1">
+                                                    {{\App\Model\Order::where(['is_wholesale'=>1])->count()}}
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif
