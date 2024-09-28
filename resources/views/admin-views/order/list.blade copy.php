@@ -69,128 +69,12 @@
                 </form>
             </div>
 
-            @if($status == 'all')
-                <div class="p-20px pb-0 mt-4">
-                    <div class="row g-3 g-sm-4 g-md-3 g-lg-4">
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['pending'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/pending.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('pending')}}</span>
-                                        </h6>
-                                        <span class="card-title text-0661CB">
-                                            {{ $countData['pending'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['confirmed'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/confirmed.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('confirmed')}}</span>
-                                        </h6>
-                                        <span class="card-title text-107980">
-                                        {{ $countData['confirmed'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['processing'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/processing.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('packaging')}}</span>
-                                        </h6>
-                                        <span class="card-title text-danger">
-                                        {{ $countData['processing'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['out_for_delivery'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('/public/public/assets/admin/img/delivery/out-for-delivery.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('out_for_delivery')}}</span>
-                                        </h6>
-                                        <span class="card-title text-00B2BE">
-                                        {{ $countData['out_for_delivery'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['delivered'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/1.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('delivered')}}</span>
-                                        </h6>
-                                        <span class="card-title text-success">
-                                        {{ $countData['delivered'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['all'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/2.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('Canceled')}}</span>
-                                        </h6>
-                                        <span class="card-title text-danger">
-                                        {{ $countData['canceled'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['returned'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/3.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('returned')}}</span>
-                                        </h6>
-                                        <span class="card-title text-warning">
-                                        {{ $countData['returned'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-sm-6 col-lg-3">
-                                <a class="order--card h-100" href="{{route('admin.orders.list',['failed'])}}">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="{{asset('public/public/assets/admin/img/delivery/4.png')}}" alt="{{ translate('dashboard')}}" class="oder--card-icon">
-                                            <span>{{translate('failed_to_deliver')}}</span>
-                                        </h6>
-                                        <span class="card-title text-danger">
-                                        {{ $countData['failed'] }}
-                                    </span>
-                                    </div>
-                                </a>
-                            </div>
-                    </div>
-                </div>
-            @endif
+            
 
             <div class="card-body p-20px">
                 <div class="order-top">
                     <div class="card--header">
-                        <form action="{{url()->current()}}" method="GET">
+                        <!-- <form action="{{url()->current()}}" method="GET">
                             <div class="input-group">
                                 <input id="datatableSearch_" type="search" name="search"
                                        class="form-control"
@@ -202,7 +86,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        </form> -->
                         <div class="hs-unfold mr-2">
                             <a class="js-hs-unfold-invoker btn btn-sm btn-outline-primary-2 dropdown-toggle min-height-40" href="javascript:;"
                                 data-hs-unfold-options='{
@@ -262,6 +146,7 @@
 
                         <tbody id="set-rows">
                         @foreach($orders as $key=>$order)
+                        
                             <tr class="status-{{$order['order_status']}} class-all">
                                 <td class="">
                                     {{$orders->firstItem()+$key}}

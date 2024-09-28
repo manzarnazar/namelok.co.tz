@@ -228,10 +228,15 @@ class OrderController extends Controller
             DB::beginTransaction();
             $orderId = 100000 + Order::all()->count() + 1;
             $isWholesale = 0;
+            $collaborationId = null;
 
         foreach ($request['cart'] as $c) {
             $product = $this->product->find($c['product_id']);
             $isWholesale = $product['is_wholesale'] == 1 ? 1 : $isWholesale;
+            $collaboration = DB::table('collaborations')->where('product_id', $product->id)->first();
+            if ($collaboration) {
+                $collaborationId = $collaboration->id;
+            }
         }
             $or = [
                 'id' => $orderId,
@@ -259,7 +264,10 @@ class OrderController extends Controller
                 'free_delivery_amount' => $freeDeliveryAmount,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'is_wholesale' => $isWholesale
+                'is_wholesale' => $isWholesale,
+                'collaboration_id' => $collaborationId, // Add collaboration ID here
+
+
             ];
 
             $orderTimeSlotId = $or['time_slot_id'];
