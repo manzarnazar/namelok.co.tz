@@ -2542,4 +2542,5 @@
   'Turning Collaboration will create offer on product Collaboration' => 'Turning Collaboration will create offer on product Collaboration',
   'Last date is required for collaboration products!' => 'Last date is required for collaboration products!',
   'Collaboration note is required if the product is Collaboration!' => 'Collaboration note is required if the product is Collaboration!',
+  'Waitlist' => 'Waitlist',
 );
