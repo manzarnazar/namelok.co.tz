@@ -14,6 +14,7 @@ class Order extends Model
     protected $fillable = [
         // other columns
         'is_wholesale',
+        'collaboration_id',
     ];
     protected $casts = [
         'order_amount'           => 'float',
@@ -31,7 +32,8 @@ class Order extends Model
         'delivery_address'       => 'array',
         'delivery_date'          => 'date',
         'free_delivery_amount'   => 'float',
-        'is_wholesale'           =>  'integer'
+        'is_wholesale'           =>  'integer',
+        'collaboration_id'       =>  'integer'
     ];
 
     public function details(): \Illuminate\Database\Eloquent\Relations\HasMany

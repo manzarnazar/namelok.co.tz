@@ -25,49 +25,57 @@
                     @else
                         {{ translate(ucwords(str_replace('_',' ',$status ))) }} {{translate('Orders')}}
                     @endif
+                    @if ($status == "collaboration")
+
+                    @else
                     <span class="badge badge-pill badge-soft-secondary ml-2">{{ $orders->total() }}</span>
+                        
+                    @endif
                 </span>
 
             </h1>
         </div>
 
         <div class="card">
-            <div class="card-header shadow flex-wrap p-20px border-0">
-                <h5 class="form-bold w-100 mb-3">{{ translate('Select Date Range') }}</h5>
-                <form class="w-100">
-                    <div class="row g-3 g-sm-4 g-md-3 g-lg-4">
-                        <div class="col-sm-6 col-md-4 col-lg-2">
-                            <select class="custom-select custom-select-sm text-capitalize min-h-45px" name="branch_id">
-                                <option disabled>--- {{translate('select')}} {{translate('branch')}} ---</option>
-                                <option value="all" {{ $branchId == 'all' ? 'selected': ''}}>{{translate('all')}} {{translate('branch')}}</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{$branch['id']}}" {{ $branch['id'] == $branchId ? 'selected' : ''}}>{{$branch['name']}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <div class="input-date-group">
-                                <label class="input-label" for="start_date">{{ translate('Start Date') }}</label>
-                                <label class="input-date">
-                                    <input type="text" id="start_date" name="start_date" value="{{$startDate}}" class="js-flatpickr form-control flatpickr-custom min-h-45px" placeholder="yy-mm-dd" data-hs-flatpickr-options='{ "dateFormat": "Y-m-d"}'>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <div class="input-date-group">
-                                <label class="input-label" for="end_date">{{ translate('End Date') }}</label>
-                                <label class="input-date">
-                                    <input type="text" id="end_date" name="end_date" value="{{$endDate}}" class="js-flatpickr form-control flatpickr-custom min-h-45px" placeholder="yy-mm-dd" data-hs-flatpickr-options='{ "dateFormat": "Y-m-d"}'>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-12 col-lg-4 __btn-row">
-                            <a href="{{ route('admin.orders.list',['all']) }}" class="btn w-100 btn--reset min-h-45px">{{translate('clear')}}</a>
-                            <button type="submit" id="show_filter_data" class="btn w-100 btn--primary min-h-45px">{{translate('show data')}}</button>
+           @if ($status != "collaboration")
+           <div class="card-header shadow flex-wrap p-20px border-0">
+            <h5 class="form-bold w-100 mb-3">{{ translate('Select Date Range') }}</h5>
+            <form class="w-100">
+                <div class="row g-3 g-sm-4 g-md-3 g-lg-4">
+                    <div class="col-sm-6 col-md-4 col-lg-2">
+                        <select class="custom-select custom-select-sm text-capitalize min-h-45px" name="branch_id">
+                            <option disabled>--- {{translate('select')}} {{translate('branch')}} ---</option>
+                            <option value="all" {{ $branchId == 'all' ? 'selected': ''}}>{{translate('all')}} {{translate('branch')}}</option>
+                            @foreach($branches as $branch)
+                                <option value="{{$branch['id']}}" {{ $branch['id'] == $branchId ? 'selected' : ''}}>{{$branch['name']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <div class="input-date-group">
+                            <label class="input-label" for="start_date">{{ translate('Start Date') }}</label>
+                            <label class="input-date">
+                                <input type="text" id="start_date" name="start_date" value="{{$startDate}}" class="js-flatpickr form-control flatpickr-custom min-h-45px" placeholder="yy-mm-dd" data-hs-flatpickr-options='{ "dateFormat": "Y-m-d"}'>
+                            </label>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <div class="input-date-group">
+                            <label class="input-label" for="end_date">{{ translate('End Date') }}</label>
+                            <label class="input-date">
+                                <input type="text" id="end_date" name="end_date" value="{{$endDate}}" class="js-flatpickr form-control flatpickr-custom min-h-45px" placeholder="yy-mm-dd" data-hs-flatpickr-options='{ "dateFormat": "Y-m-d"}'>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-12 col-lg-4 __btn-row">
+                        <a href="{{ route('admin.orders.list',['all']) }}" class="btn w-100 btn--reset min-h-45px">{{translate('clear')}}</a>
+                        <button type="submit" id="show_filter_data" class="btn w-100 btn--primary min-h-45px">{{translate('show data')}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+               
+           @endif
 
             @if($status == 'all')
                 <div class="p-20px pb-0 mt-4">
@@ -188,6 +196,7 @@
             @endif
 
             <div class="card-body p-20px">
+                @if ($status != "collaboration")
                 <div class="order-top">
                     <div class="card--header">
                         <form action="{{url()->current()}}" method="GET">
@@ -226,10 +235,58 @@
                         </div>
                     </div>
                 </div>
+                    
+                @endif
 
                 {{-- check here --}}
-                {{$status}}
+
+               
                 <div class="table-responsive datatable-custom">
+                    
+
+                    @if ($status == "collaboration")
+
+                        <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">{{translate('SL')}}</th>
+                                    <th class="text-center">{{translate('Product Name')}}</th>
+                                    <th class="text-center">{{translate('Orders')}}</th>
+                                    <th class="text-center">{{translate('Last Date')}}</th>
+                                    <th class="text-center">{{translate('Action')}}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="set-rows">
+                                @foreach($collaborationOrders as $key => $order)
+                                <tr >
+                                    <!-- SL (Serial Number) -->
+                                    <td class="text-center">{{ $collaborationOrders->firstItem() + $key }}</td>
+                                    
+                                    <!-- Product Name -->
+                                    <td class="text-center">{{ $order->product_name }}</td>
+                                    
+                                    <!-- Orders -->
+                                    <td class="text-center">{{ $order->order_count }}</td>
+                                    
+                                    <!-- Last Date -->
+                                    <td class="text-center">{{ date('d M Y', strtotime($order->last_date)) }}</td>
+
+                                    <td>
+                                        <div class="btn--container justify-content-center">
+                                            <a class="action-btn btn--primary btn-outline-primary" href="{{route('admin.orders.collaborationDetails',['id'=>$order['id']])}}"><i class="tio-invisible"></i></a>
+                                           
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            
+                        </table>
+
+
+                    @else
+                    
                     <table class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                         <thead class="thead-light">
                         <tr>
@@ -381,17 +438,33 @@
                         @endforeach
                         </tbody>
                     </table>
+                        
+                    @endif
                 </div>
-                @if(count($orders)==0)
-                    <div class="text-center p-4">
-                        <img class="w-120px mb-3" src="{{asset('public/public/assets/admin')}}/svg/illustrations/sorry.svg" alt="Image Description">
-                        <p class="mb-0">{{ translate('No_data_to_show')}}</p>
-                    </div>
+                @if ($status == "collaboration")
+
+                {{-- @if(count($collborationOrders)==0)
+                <div class="text-center p-4">
+                    <img class="w-120px mb-3" src="{{asset('public/public/assets/admin')}}/svg/illustrations/sorry.svg" alt="Image Description">
+                    <p class="mb-0">{{ translate('No_data_to_show')}}</p>
+                </div>
+            @endif --}}
+                
+                @else    
+                    @if(count($orders)==0)
+                        <div class="text-center p-4">
+                            <img class="w-120px mb-3" src="{{asset('public/public/assets/admin')}}/svg/illustrations/sorry.svg" alt="Image Description">
+                            <p class="mb-0">{{ translate('No_data_to_show')}}</p>
+                        </div>
+                    @endif
                 @endif
             </div>
             <div class="card-footer border-0">
                 <div class="d-flex justify-content-center justify-content-sm-end">
+                    @if ($status != "collaboration")
+                        
                     {!! $orders->links() !!}
+                    @endif
                 </div>
             </div>
         </div>
