@@ -192,6 +192,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'orders', 'as' => 'orders.','middleware'=>['module:order_management']], function () {
             Route::get('list/{status}', [OrderController::class, 'list'])->name('list');
+            Route::get('collaborationDetails/{id}', [OrderController::class, 'collaborationDetails'])->name('collaborationDetails');
+
+
             Route::get('details/{id}', [OrderController::class, 'details'])->name('details');
             Route::get('status', [OrderController::class, 'status'])->name('status');
             Route::get('add-delivery-man/{order_id}/{delivery_man_id}', [OrderController::class, 'addDeliveryman'])->name('add-delivery-man');
