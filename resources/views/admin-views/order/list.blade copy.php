@@ -15,7 +15,7 @@
         <div class="page-header">
             <h1 class="mb-0 page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/public/assets/admin/img/all_orders.png')}}" class="w--20" alt="">
+                    <img src="{{asset('public/assets/admin/img/all_orders.png')}}" class="w--20" alt="">
                 </span>
                 <span class="">
                     @if($status =='processing')
@@ -102,7 +102,7 @@
                                     {{ translate('options') }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{route('admin.orders.export', [$status, 'branch_id'=>Request::get('branch_id'), 'start_date'=>Request::get('start_date'), 'end_date'=>Request::get('end_date'), 'search'=>Request::get('search')])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/public/assets/admin') }}/svg/components/excel.svg"
+                                        src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                         alt="{{ translate('Image Description')}}">
                                     {{ translate('excel') }}
                                 </a>
@@ -269,7 +269,7 @@
                 </div>
                 @if(count($orders)==0)
                     <div class="text-center p-4">
-                        <img class="w-120px mb-3" src="{{asset('public/public/assets/admin')}}/svg/illustrations/sorry.svg" alt="Image Description">
+                        <img class="w-120px mb-3" src="{{asset('public/assets/admin')}}/svg/illustrations/sorry.svg" alt="Image Description">
                         <p class="mb-0">{{ translate('No_data_to_show')}}</p>
                     </div>
                 @endif
@@ -284,5 +284,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/public/assets/admin/js/flatpicker.js') }}"></script>
+    <script src="{{ asset('public/assets/admin/js/flatpicker.js') }}"></script>
 @endpush
