@@ -120,12 +120,12 @@ aside .navbar-vertical-aside-has-menu.active > .nav-link {
 }
 
 :root {
-    --primary-clr: #24bac3;
-    --primary-clr-2: #009faa;
+    --primary-clr: #02316a;
+    --primary-clr-2: #044faa;
     --secondary-clr: #99a7ba;
     --title-clr: #334257;
-    --dark-clr: #005555;
-    --base-clr: #2aa26a;
+    --dark-clr: #032247;
+    --base-clr: #145cb5;
     --base-clr-2: #5affba;
     --border-clr: #99a7ba45;
     --warning-clr: #ff7500;
@@ -134,7 +134,7 @@ aside .navbar-vertical-aside-has-menu.active > .nav-link {
     --info-clr: #0096ff;
     --theameColor: #045cff;
     --title-2: #758590;
-    --title-3: #107980;
+    --title-3: #044faa;
     --hover-clr: #1b7fed;
 }
 
@@ -250,7 +250,7 @@ aside .navbar-vertical-aside-has-menu.active > .nav-link {
 }
 
 .nav-subtitle {
-    color: #b1e3ce;
+    color: #6b9dda;
     font-weight: 700;
 }
 
@@ -1085,22 +1085,22 @@ a[class*="btn--"]:hover {
 
 .btn-primary,
 .btn--primary {
-    background: #107980;
-    border-color: #107980 !important;
+    background: #023675;
+    border-color: #044faa !important;
 }
 
 .btn--primary:hover,
 .btn-primary:hover {
     color: #fff !important;
-    background: #0c6970 !important;
+    background: #044faa !important;
 }
 
 .btn-outline-primary:not(:hover) {
     background: transparent !important;
-    color: #107980;
+    color: #044faa;
 }
 .btn-outline-primary:hover {
-    background: #107980;
+    background: #044faa;
     color: #fff !important;
 }
 
