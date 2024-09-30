@@ -1873,7 +1873,7 @@ body {
 }
 
 .toggle-switch-input:checked + .toggle-switch-label {
-  background-color: #009faa;
+  background-color: var(--primary-clr-2);
 }
 
 .product-list-page {
