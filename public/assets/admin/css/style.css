@@ -80,7 +80,7 @@ aside .navbar-vertical-aside-has-menu.active > .nav-link {
 }
 
 .navbar-vertical-content {
-  background: #032247;
+  background: #032247 !important;
 }
 
 .swal2-popup .swal2-styled.swal2-cancel {
