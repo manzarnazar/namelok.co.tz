@@ -1144,7 +1144,7 @@ a[class*=btn--]:hover {
 .btn--primary:hover,
 .btn-primary:hover {
   color: #fff !important;
-  background: #075fca !important;
+  background: #0e6de1 !important;
 }
 
 .btn-outline-primary:not(:hover) {
